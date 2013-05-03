@@ -43,7 +43,7 @@ DEFAULT_FIELDS = {
     time: (fields.TimeField, {'widget': widgets.AdminTimeWidget}),
     float: (fields.FloatField, {'widget': NUMERIC_WIDGET}),
 }
-for field_type, val in DEFAULT_FIELDS:
+for field_type, val in DEFAULT_FIELDS.iteritems():
     if field_type not in FIELDS:
         FIELDS[field_type] = val
 
