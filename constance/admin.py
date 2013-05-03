@@ -32,7 +32,8 @@ STRING_LIKE = (fields.CharField, {
     'required': False,
 })
 
-FIELDS = {
+FIELDS = settings.FIELDS
+DEFAULT_FIELDS = {
     bool: (fields.BooleanField, {'required': False}),
     int: INTEGER_LIKE,
     Decimal: (fields.DecimalField, {'widget': NUMERIC_WIDGET}),
@@ -42,7 +43,9 @@ FIELDS = {
     time: (fields.TimeField, {'widget': widgets.AdminTimeWidget}),
     float: (fields.FloatField, {'widget': NUMERIC_WIDGET}),
 }
-FIELDS.update(settings.FIELDS)
+for field_type, val in DEFAULT_FIELDS:
+    if field_type not in FIELDS:
+        FIELDS[field_type] = val
 
 if not six.PY3:
     FIELDS.update({
@@ -55,7 +58,10 @@ class ConstanceForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(ConstanceForm, self).__init__(*args, **kwargs)
         for name, (default, help_text) in settings.CONFIG.items():
-            field_class, kwargs = FIELDS[type(default)]
+            fields = filter(lambda field_type: isinstance(default, field_type),
+                            FIELDS.keys())
+            if len(fields):
+                field_class, kwargs = FIELDS[fields[0]]
             self.fields[name] = field_class(label=name, **kwargs)
 
     def save(self):
