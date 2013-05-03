@@ -42,6 +42,7 @@ FIELDS = {
     time: (fields.TimeField, {'widget': widgets.AdminTimeWidget}),
     float: (fields.FloatField, {'widget': NUMERIC_WIDGET}),
 }
+FIELDS.update(settings.FIELDS)
 
 if not six.PY3:
     FIELDS.update({
