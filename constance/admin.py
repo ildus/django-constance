@@ -62,6 +62,7 @@ class ConstanceForm(forms.Form):
                             FIELDS.keys())
             if len(fields):
                 field_class, kwargs = FIELDS[fields[0]]
+
             self.fields[name] = field_class(label=name, **kwargs)
 
     def save(self):
